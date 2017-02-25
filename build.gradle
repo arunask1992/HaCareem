@@ -53,11 +53,20 @@ dependencies {
     compile('org.postgresql:postgresql:9.4.1207.jre7')
     compile('org.apache.commons:commons-dbcp2:2.1.1')
     compile('org.liquibase:liquibase-core:3.3.2')
+    compile("org.springframework.amqp:spring-rabbit")
+    compile("org.springframework.amqp:spring-amqp")
 
     compile('com.google.guava:guava:19.0')
     compile('com.squareup.okhttp:okhttp:2.7.2')
-    testCompile("junit:junit")
-    testCompile("org.springframework.boot:spring-boot-starter-test")
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('com.squareup.okhttp:mockwebserver:2.7.2')
+    testCompile('org.powermock:powermock-api-mockito:1.6.4') {
+        exclude group: 'org.javassist', module: 'javassist'
+    }
+    testCompile('org.powermock:powermock-module-junit4:1.6.4') {
+        exclude group: 'org.javassist', module: 'javassist'
+    }
+    testCompile('org.javassist:javassist:3.20.0-GA')
 }
 
 task wrapper(type: Wrapper) {

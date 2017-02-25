@@ -32,4 +32,7 @@
                                  referencedColumnNames="id"
                                  referencedTableName="hubs"/>
     </changeSet>
+    <changeSet id="2" author="Aruna" runOnChange="true">
+        <sqlFile path="db/changelog/migration/create_hubs_resources.sql"/>
+    </changeSet>
 </databaseChangeLog>

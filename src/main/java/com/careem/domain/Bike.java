@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue(value = Bike.TYPE)
+@NoArgsConstructor
 public class Bike extends Resource{
     public static final String TYPE = "bike";
 

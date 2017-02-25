@@ -38,19 +38,23 @@ public abstract class Resource<T> extends BaseModel<Resource<T>> {
     @Type(type = "com.careem.domain.type.hibernate.PositionType")
     @Setter
     @Column(name = "last_known_location")
-    private Position lastKnownPosition;
+    private Position lastKnownLocation;
 
-    public Resource(String name, Hub hub, Position lastKnownPosition) {
+    public Resource(String name, Hub hub, Position lastKnownLocation) {
         this.name = name;
         this.hub = hub;
-        this.lastKnownPosition = lastKnownPosition;
+        this.lastKnownLocation = lastKnownLocation;
     }
 
     public abstract boolean canHandle(Load load);
 
     public static void updatePosition(long resourceId, Position position) {
         Resource.ACCESSOR.find(resourceId)
-                .ifPresent(resource -> resource.setLastKnownPosition(position));
+                .ifPresent(resource -> {
+                        resource.setLastKnownLocation(position);
+                        resource.persist();
+                        resource.flush();
+                });
     }
 
     public Long getId(){

@@ -35,4 +35,7 @@
     <changeSet id="2" author="Aruna" runOnChange="true">
         <sqlFile path="db/changelog/migration/create_hubs_resources.sql"/>
     </changeSet>
+    <changeSet id="3" author="Aruna" runOnChange="true">
+        <dropColumn tableName="resources" columnName="capacity"/>
+    </changeSet>
 </databaseChangeLog>

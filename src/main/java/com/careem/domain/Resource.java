@@ -6,14 +6,13 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
 @Getter
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "resources")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
@@ -22,6 +21,8 @@ import javax.persistence.*;
         @JsonSubTypes.Type(value = Bike.class, name = Bike.TYPE),
         @JsonSubTypes.Type(value = Car.class, name = Car.TYPE)
 })
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class Resource<T> extends BaseModel<Resource<T>> {
     public static Accessor<Resource> ACCESSOR = new Accessor<>(Resource.class);
 
@@ -35,7 +36,25 @@ public abstract class Resource<T> extends BaseModel<Resource<T>> {
     protected Hub hub;
 
     @Type(type = "com.careem.domain.type.hibernate.PositionType")
+    @Setter
+    @Column(name = "last_known_location")
     private Position lastKnownPosition;
 
+    public Resource(String name, Hub hub, Position lastKnownPosition) {
+        this.name = name;
+        this.hub = hub;
+        this.lastKnownPosition = lastKnownPosition;
+    }
+
     public abstract boolean canHandle(Load load);
+
+    public static void updatePosition(long resourceId, Position position) {
+        Resource.ACCESSOR.find(resourceId)
+                .ifPresent(resource -> resource.setLastKnownPosition(position));
+    }
+
+    public Long getId(){
+        return this.id;
+    }
+
 }

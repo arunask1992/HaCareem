@@ -1,0 +1,35 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <property name="now" value="now()" dbms="postgresql"/>
+    <changeSet id="1" author="Aruna">
+        <createTable tableName="hubs">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(200)"></column>
+            <column name="position" type="json"></column>
+        </createTable>
+        <createTable tableName="resources">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(200)"/>
+            <column name="type" type="varchar(200)"/>
+            <column name="capacity" type="varchar(30)"/>
+            <column name="last_known_location" type="json"/>
+            <column name="hub_id" type="int"/>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="hub_id"
+                                 baseTableName="resources"
+                                 constraintName="fk_resource_hub"
+                                 deferrable="true"
+                                 initiallyDeferred="true"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="hubs"/>
+    </changeSet>
+</databaseChangeLog>

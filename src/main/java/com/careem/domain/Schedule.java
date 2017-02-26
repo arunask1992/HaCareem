@@ -79,10 +79,12 @@ public class Schedule extends BaseModel<Schedule> {
     @SneakyThrows
     public void updateStatus(String status){
         this.status = status;
+
         String messageAsJSON = "{\"event\": \"quotation.status.changed\"" +
                 "                \"quotation_id\":"  + this.quotation.getId() +
                 "                \"status\":" + this.getStatus() +
                 "  }";
+        this.getQuotation().markDelivered();
         MessagePostProcessor messagePostProcessor = message -> message;
         BeanUtil.getBean(RabbitTemplate.class).convertAndSend("ecommerce_notification_queue", BeanUtil.getBean(ObjectMapper.class).writeValueAsBytes(messageAsJSON), messagePostProcessor);
     }
@@ -93,5 +95,8 @@ public class Schedule extends BaseModel<Schedule> {
                         + DateHelper.enclose(BeanUtil.getBean(DateHelper.class).today()) + ")", Schedule.class)
                 .getResultList();
 
+    }
+    private boolean areOtherSchedulesCompleteForQuotation(){
+        return this.getQuotation().getSchedules().stream().allMatch(schedule -> schedule.getStatus().equals("delivered"));
     }
 }

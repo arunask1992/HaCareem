@@ -2,6 +2,7 @@ package com.careem.scheduler;
 
 import com.careem.commons.BeanUtil;
 import com.careem.commons.DBContextProvider;
+import com.careem.domain.Quotation;
 import com.careem.domain.Schedule;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,8 +28,10 @@ public class ScheduleStatusTracker implements ApplicationListener<ContextRefresh
             contextProvider.withDBConnection(() -> {
 
                 Schedule.getAllDelayedDeliveries().forEach(schedule -> {
+                    final Quotation quotation = schedule.getQuotation();
+                    quotation.setStatus("delayed");
                     String messageAsJSON = "{\"event\": \"schedule.status.delayed\"" +
-                            "                \"quotation_id\":" + schedule.getQuotation().getId() +
+                            "                \"quotation_id\":" + quotation.getId() +
                             "  }";
                     MessagePostProcessor messagePostProcessor = message -> message;
                     try {

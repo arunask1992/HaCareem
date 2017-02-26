@@ -81,4 +81,9 @@
         referencedColumnNames="id"
         referencedTableName="quotations"/>
     </changeSet>
+    <changeSet id="5" author="Aruna">
+        <addColumn tableName="quotations">
+            <column name="status" type="varchar(20)" defaultValue="on_track" value="on_track"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

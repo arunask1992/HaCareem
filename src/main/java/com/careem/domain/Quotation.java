@@ -3,15 +3,13 @@ package com.careem.domain;
 import com.careem.commons.BaseModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Wither;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -43,4 +41,14 @@ public class Quotation extends BaseModel<Quotation>{
     @Type(type = "com.careem.domain.type.hibernate.GoodsType")
     @JsonIgnore
     public GoodsType typeOfGoods;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "quotation")
+    public List<Schedule> schedules;
+
+    @Setter
+    public String status;
+
+    public void markDelivered() {
+        this.status = "delivered";
+    }
 }

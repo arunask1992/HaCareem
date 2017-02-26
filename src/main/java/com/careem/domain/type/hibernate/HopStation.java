@@ -2,7 +2,6 @@ package com.careem.domain.type.hibernate;
 
 import com.careem.commons.BaseModel;
 import com.careem.domain.Hub;
-import com.careem.domain.Position;
 import com.careem.domain.jackson.View;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;

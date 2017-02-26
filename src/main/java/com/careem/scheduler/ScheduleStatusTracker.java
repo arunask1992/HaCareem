@@ -3,6 +3,7 @@ package com.careem.scheduler;
 import com.careem.commons.BeanUtil;
 import com.careem.commons.DBContextProvider;
 import com.careem.domain.Schedule;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.springframework.amqp.core.MessagePostProcessor;
@@ -21,21 +22,35 @@ public class ScheduleStatusTracker implements ApplicationListener<ContextRefresh
 
     @Scheduled(cron = "${scheduler.track-status.cron}")
     @SneakyThrows
-    public void trackStatus() {
-        contextProvider.withDBConnection(() -> {
-            Schedule.getAllDelayedDeliveries().forEach(schedule -> {
-                String messageAsJSON = "{\"event\": \"schedule.status.delayed\"" +
-                        "                \"quotation_id\":"  + schedule.getQuotation().getId()  +
-                        "  }";
-                MessagePostProcessor messagePostProcessor = message -> message;
-                BeanUtil.getBean(RabbitTemplate.class).convertAndSend("ecommerce_notification_queue", BeanUtil.getBean(ObjectMapper.class).writeValueAsBytes(messageAsJSON), messagePostProcessor);
+    public void trackStatus() throws JsonProcessingException {
+        try {
+            contextProvider.withDBConnection(() -> {
+
+                Schedule.getAllDelayedDeliveries().forEach(schedule -> {
+                    String messageAsJSON = "{\"event\": \"schedule.status.delayed\"" +
+                            "                \"quotation_id\":" + schedule.getQuotation().getId() +
+                            "  }";
+                    MessagePostProcessor messagePostProcessor = message -> message;
+                    try {
+
+                        BeanUtil.getBean(RabbitTemplate.class).convertAndSend("ecommerce_notification_queue", BeanUtil.getBean(ObjectMapper.class).writeValueAsBytes(messageAsJSON), messagePostProcessor);
+                    } catch (JsonProcessingException ex) {
+                        ex.printStackTrace();
+                    }
+                });
             });
-        });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        this.trackStatus();
+        try {
+            this.trackStatus();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -14,7 +14,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static java.util.Calendar.HOUR;
 import static java.util.Calendar.MINUTE;
 
 @Getter

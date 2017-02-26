@@ -27,6 +27,7 @@ public class ScheduleController extends BaseController {
                 .source(quotation.getSource()).destination(quotation.getDestination())
                 .typeOfGoods(quotation.getTypeOfGoods()).build();
         createdQuotation.persist();
-        return new RouteTracer(createdQuotation).getHops();
+        return quotation.getTransferType().isWithinCity() ? new RouteTracer(createdQuotation).getNativeHops() :
+                new RouteTracer(createdQuotation).getHops() ;
     }
 }

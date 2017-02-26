@@ -61,11 +61,15 @@
             </column>
         </createTable>
         <createTable tableName="schedule">
-            <column name="source" type="int"></column>
-            <column name="destination" type="int"></column>
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="source_id" type="int"></column>
+            <column name="destination_id" type="int"></column>
             <column name="estimated_time" type="timestamp with time zone"></column>
             <column name="status" type="varchar(20)"></column>
             <column name="quotation_id" type="int"></column>
+            <column name="mode_of_transport" type="json"></column>
         </createTable>
         <addForeignKeyConstraint baseColumnNames="quotation_id"
         baseTableName="schedule"

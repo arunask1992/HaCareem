@@ -1,5 +1,6 @@
 package com.careem.domain.viewmodels;
 
+import com.careem.domain.GoodTransferType;
 import com.careem.domain.GoodsType;
 import com.careem.domain.Position;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -16,4 +17,6 @@ public class QuotationViewModel {
     protected Position source;
     protected Position destination;
     protected GoodsType typeOfGoods;
+    protected GoodTransferType type;
+    protected GoodTransferType transferType;
 }

@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Getter
@@ -34,5 +36,10 @@ public class Hub extends BaseModel<Hub> {
                 nearestHub = hub;
         }
         return nearestHub;
+    }
+    public static List<Hub> returnOrderedHubs(Position source){
+        final List<Hub> hubs = Hub.ACCESSOR.all();
+        Collections.sort(hubs, (h1, h2) -> Position.findDistance(h1.getPosition(), source).compareTo(Position.findDistance(h2.getPosition(), source)));
+        return hubs;
     }
 }

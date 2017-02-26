@@ -23,9 +23,6 @@ public class APIGatewayException extends RuntimeException {
         this.errors = errors;
     }
 
-    public APIGatewayException(String key, String error) {
-        this(ImmutableMap.of(key, newArrayList(error)));
-    }
 
     private static String formatMessage(Map<String, Collection<String>> errors) {
         try {
@@ -33,6 +30,18 @@ public class APIGatewayException extends RuntimeException {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+    public APIGatewayException(String url, Exception e) {
+        super(messageWithUrl(url), e);
+        e.printStackTrace();
+    }
+
+    public APIGatewayException(String url, String message) {
+        super(String.format("%s: %s", messageWithUrl(url), message));
+    }
+
+    private static String messageWithUrl(String url) {
+        return String.format("Exception while processing url: %s", url);
     }
 
     public Map<String, Collection<String>> getErrors() {

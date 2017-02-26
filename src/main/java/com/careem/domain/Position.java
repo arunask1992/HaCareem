@@ -21,7 +21,7 @@ public class Position {
     }
 
     String longitude;
-    public static double findDistance(Position p1, Position p2){
+    public static Double findDistance(Position p1, Position p2){
         final int R = 6371; // Radius of the earth
         final Double lon2 = new Double(p2.getLongitude());
         final Double lon1 = new Double(p1.getLongitude());

@@ -3,11 +3,13 @@ package com.careem.domain;
 import com.careem.commons.BaseModel;
 import com.careem.domain.jackson.View;
 import com.careem.domain.type.hibernate.HopStation;
+import com.careem.domain.viewmodels.PartnerSchedule;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -31,8 +33,12 @@ public class Schedule extends BaseModel<Schedule> {
     @JsonView(View.Schedule.class)
     protected HopStation source;
 
-    @OneToOne
     @JsonView(View.Schedule.class)
+    @Type(type = "com.careem.domain.type.hibernate.ModeOfTransportType")
+    protected ModeOfTransport modeOfTransport;
+
+    @JsonView(View.Schedule.class)
+    @OneToOne
     protected HopStation destination;
     @JsonView(View.Schedule.class)
     protected Date estimatedTime;
@@ -43,9 +49,19 @@ public class Schedule extends BaseModel<Schedule> {
     protected Quotation quotation;
     public  Schedule (Quotation quotation, Resource resource, Position resourcelastSpotted){
         final Long stationId = new Random().nextLong();
+        this.quotation = quotation;
         this.source = new HopStation(resource.getHub()).persist();
-        this.destination = new HopStation(stationId.toString(), "end_user", "user_destination"+ stationId);
+        this.destination = new HopStation(stationId.toString(), "end_user", "user_destination"+ stationId).persist();
         this.estimatedTime = resource.getETA(quotation, resourcelastSpotted);
+        this.modeOfTransport = new ModeOfTransport("hub", resource.getName());
         this.status = "on_track";
+    }
+    public Schedule(PartnerSchedule partnerSchedule){
+        this.quotation = partnerSchedule.getQuotation();
+        this.source = partnerSchedule.getSource().persist();
+        this.destination = partnerSchedule.getDestination().persist();
+        this.estimatedTime = partnerSchedule.getEstimatedTime();
+        this.modeOfTransport = partnerSchedule.getModeOfTransport();
+        this.status = partnerSchedule.getStatus();
     }
 }

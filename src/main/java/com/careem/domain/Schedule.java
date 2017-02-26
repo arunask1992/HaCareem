@@ -5,6 +5,7 @@ import com.careem.commons.BeanUtil;
 import com.careem.domain.jackson.View;
 import com.careem.domain.type.hibernate.HopStation;
 import com.careem.domain.viewmodels.PartnerSchedule;
+import com.careem.helpers.DateHelper;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
@@ -14,6 +15,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -83,5 +85,13 @@ public class Schedule extends BaseModel<Schedule> {
                 "  }";
         MessagePostProcessor messagePostProcessor = message -> message;
         BeanUtil.getBean(RabbitTemplate.class).convertAndSend("ecommerce_notification_queue", BeanUtil.getBean(ObjectMapper.class).writeValueAsBytes(messageAsJSON), messagePostProcessor);
+    }
+
+    public static List<Schedule> getAllDelayedDeliveries() {
+       return entityManager()
+                .createNativeQuery("select from schedule where (estimated_time IS NOT NULL AND CAST(estimated_time AS DATE) < "
+                        + DateHelper.enclose(BeanUtil.getBean(DateHelper.class).today()) + ")", Schedule.class)
+                .getResultList();
+
     }
 }

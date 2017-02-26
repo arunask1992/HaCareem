@@ -8,3 +8,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/ecommerce_development
     username: postgres
     password: password
+scheduler:
+  track-status:
+    cron: "0 0 1 * * *"

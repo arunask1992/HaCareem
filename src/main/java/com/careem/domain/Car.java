@@ -34,4 +34,9 @@ public class Car extends Resource {
         return 1.0;
     }
 
+    @Override
+    public Double getResourceCostPerKm() {
+        return 10.0;
+    }
+
 }

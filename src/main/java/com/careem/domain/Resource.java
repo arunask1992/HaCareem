@@ -80,5 +80,11 @@ public abstract class Resource<T> extends BaseModel<Resource<T>> {
         return    cal.getTime();
 
     }
+    public abstract Double getResourceCostPerKm();
+
+    public Double weightedCost(Position position){
+        final Double distance = Position.findDistance(position, this.getLastKnownLocation());
+        return distance * getResourceCostPerKm();
+    }
 
 }

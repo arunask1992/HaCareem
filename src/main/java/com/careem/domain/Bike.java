@@ -37,4 +37,9 @@ public class Bike extends Resource{
     public Double getMaximumDeliveryTimePer100KmsInHrs() {
         return 0.45;
     }
+
+    @Override
+    public Double getResourceCostPerKm() {
+        return 5.0;
+    }
 }

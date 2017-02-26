@@ -73,6 +73,7 @@ public class Schedule extends BaseModel<Schedule> {
     public static Optional<Schedule> getSchedule(Long scheduleId) {
         return Schedule.ACCESSOR.find(scheduleId);
     }
+
     @SneakyThrows
     public void updateStatus(String status){
         this.status = status;

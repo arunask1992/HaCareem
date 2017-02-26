@@ -1,7 +1,7 @@
 package com.careem.controllers;
 
 import com.careem.domain.Quotation;
-import com.careem.domain.RouteTracer;
+import com.careem.domain.DispatchService;
 import com.careem.domain.Schedule;
 import com.careem.domain.jackson.View;
 import com.careem.domain.viewmodels.QuotationViewModel;
@@ -25,8 +25,8 @@ public class ScheduleController extends BaseController {
                 .source(quotation.getSource()).destination(quotation.getDestination())
                 .typeOfGoods(quotation.getTypeOfGoods()).build();
         createdQuotation.persist();
-        return quotation.getTransferType().isWithinCity() ? new RouteTracer(createdQuotation).getNativeHops() :
-                new RouteTracer(createdQuotation).getHops() ;
+        return quotation.getTransferType().isWithinCity() ? new DispatchService(createdQuotation).getNativeHops() :
+                new DispatchService(createdQuotation).getHops() ;
     }
     @RequestMapping(value = "/ecommerce-api/schedules/{scheduleId}/update_schedule_status", method = POST)
     @ResponseStatus(HttpStatus.OK)

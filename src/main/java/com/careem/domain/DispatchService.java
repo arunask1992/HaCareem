@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 
-public class RouteTracer {
+public class DispatchService {
     private Quotation quotation;
 
-    public RouteTracer(Quotation quotation) {
+    public DispatchService(Quotation quotation) {
         this.quotation = quotation;
     }
 
@@ -43,7 +43,7 @@ public class RouteTracer {
         Map<Long, Double> costMap = nearestHub.getResources()
                 .stream()
                 .filter(resource -> resource.canHandle(quotation))
-                .collect(Collectors.toMap(resource -> resource.getId(), resource -> Position.findDistance(resource.getLastKnownLocation(), quotation.getDestination())));
+                .collect(Collectors.toMap(Resource::getId, resource -> resource.weightedCost(quotation.getDestination())));
         return costMap.entrySet().stream().min(Map.Entry.comparingByValue(Double::compareTo)).get().getKey();
     }
 

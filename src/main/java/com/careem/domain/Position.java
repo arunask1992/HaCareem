@@ -3,6 +3,7 @@ package com.careem.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@EqualsAndHashCode
 public class Position {
     String latitude;
 
@@ -19,6 +21,9 @@ public class Position {
     }
     public static Double findDistance(Position p1, Position p2){
         final int R = 6371; // Radius of the earth
+        if(p1.equals(p2)){
+            return 0.0;
+        }
         final Double lon2 = new Double(p2.getLongitude());
         final Double lon1 = new Double(p1.getLongitude());
         final Double lat2 = new Double(p2.getLatitude());

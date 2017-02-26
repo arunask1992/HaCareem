@@ -43,7 +43,7 @@ public class DispatchService {
         Map<Long, Double> costMap = nearestHub.getResources()
                 .stream()
                 .filter(resource -> resource.canHandle(quotation))
-                .collect(Collectors.toMap(Resource::getId, resource -> resource.weightedCost(quotation.getDestination())));
+                .collect(Collectors.toMap(Resource::getId, resource -> resource.weightedCost(quotation.getDestination()) + resource.weightedCost(quotation.getSource())));
         return costMap.entrySet().stream().min(Map.Entry.comparingByValue(Double::compareTo)).get().getKey();
     }
 

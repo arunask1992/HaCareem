@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -21,4 +22,17 @@ public class Hub extends BaseModel<Hub> {
     private String name;
     @Type(type = "com.careem.domain.type.hibernate.PositionType")
     private Position position;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "hub")
+    private List<Resource> resources;
+
+    public static Hub findNearestHub(Position source) {
+        final List<Hub> hubs = Hub.ACCESSOR.all();
+        Hub nearestHub = hubs.get(0);
+        final double initialDistance = Position.findDistance(nearestHub.getPosition(), source);
+        for(Hub hub : hubs){
+            if(Position.findDistance(hub.getPosition(), source) < initialDistance)
+                nearestHub = hub;
+        }
+        return nearestHub;
+    }
 }

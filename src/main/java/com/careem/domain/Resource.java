@@ -10,6 +10,12 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import static java.util.Calendar.HOUR;
+import static java.util.Calendar.MINUTE;
 
 @Getter
 @Entity
@@ -46,7 +52,6 @@ public abstract class Resource<T> extends BaseModel<Resource<T>> {
         this.lastKnownLocation = lastKnownLocation;
     }
 
-    public abstract boolean canHandle(Load load);
 
     public static void updatePosition(long resourceId, Position position) {
         Resource.ACCESSOR.find(resourceId)
@@ -59,6 +64,20 @@ public abstract class Resource<T> extends BaseModel<Resource<T>> {
 
     public Long getId(){
         return this.id;
+    }
+
+    public abstract List<GoodsType> getHandledTypes();
+    public boolean canHandle(Quotation quotation) {
+        return getHandledTypes().contains(quotation.getTypeOfGoods());
+    }
+    public abstract Double getMaximumDeliveryTimePer100KmsInHrs();
+    public Date getETA(Quotation quotation, Position lastKnownLocation){
+        Calendar cal = Calendar.getInstance(); // creates calendar
+        cal.setTime(new Date()); // sets calendar time/date
+        Date oldDate = new Date();
+        final long minutes = (long) (Position.findDistance(lastKnownLocation, quotation.getDestination()) / 100 * getMaximumDeliveryTimePer100KmsInHrs() * 60);
+        new Date(oldDate.getTime() + minutes * MINUTE);
+        return    cal.getTime();
     }
 
 }

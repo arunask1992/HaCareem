@@ -8,7 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class Load {
-    private int quantity;
-    private String unit;
     private GoodsType type;
 }

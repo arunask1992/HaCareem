@@ -1,11 +1,14 @@
 package com.careem.domain;
 
+import com.careem.domain.jackson.PersistentEnumSerializer;
 import com.careem.domain.type.hibernate.PersistentEnum;
 import com.careem.exception.RecordNotFoundException;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import static java.util.Arrays.asList;
 
+@JsonSerialize(using = PersistentEnumSerializer.class)
 public enum GoodsType implements PersistentEnum {
     ELECTRICAL_APPLICANCE("electrical_appliance"),
     PERISHABLE_GOODS("perishable"),

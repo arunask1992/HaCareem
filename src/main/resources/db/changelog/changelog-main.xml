@@ -38,4 +38,43 @@
     <changeSet id="3" author="Aruna" runOnChange="true">
         <dropColumn tableName="resources" columnName="capacity"/>
     </changeSet>
+    <changeSet id="4" author="Aruna">
+        <createTable tableName="quotations">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="creator_id" type="varchar(30)"></column>
+            <column name="source" type="json"></column>
+            <column name="destination" type="json"></column>
+            <column name="expected_time_of_delivery" type="timestamp with time zone"></column>
+            <column name="type_of_goods" type="varchar(20)"></column>
+        </createTable>
+        <createTable tableName="hop_station">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="station_id" type="varchar(200)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="type" type="varchar(20)"></column>
+            <column name="station_name" type="varchar(200)">
+            </column>
+        </createTable>
+        <createTable tableName="schedule">
+            <column name="source" type="int"></column>
+            <column name="destination" type="int"></column>
+            <column name="estimated_time" type="timestamp with time zone"></column>
+            <column name="status" type="varchar(20)"></column>
+            <column name="quotation_id" type="int"></column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="quotation_id"
+        baseTableName="schedule"
+        constraintName="fk_rschedule_quotation"
+        deferrable="true"
+        initiallyDeferred="true"
+        onDelete="CASCADE"
+        onUpdate="RESTRICT"
+        referencedColumnNames="id"
+        referencedTableName="quotations"/>
+    </changeSet>
 </databaseChangeLog>

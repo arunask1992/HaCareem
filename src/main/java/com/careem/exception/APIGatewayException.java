@@ -2,12 +2,9 @@ package com.careem.exception;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
 
 import java.util.Collection;
 import java.util.Map;
-
-import static com.google.common.collect.Lists.newArrayList;
 
 public class APIGatewayException extends RuntimeException {
     private static ObjectMapper objectMapper = new ObjectMapper();

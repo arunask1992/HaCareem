@@ -1,17 +1,14 @@
 package com.careem.domain;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.List;
 
-import static com.careem.domain.GoodsType.*;
-import static com.careem.domain.GoodsType.LIQUID;
+import static com.careem.domain.GoodsType.GENERAL;
 import static com.google.common.collect.Lists.newArrayList;
 
 @Entity

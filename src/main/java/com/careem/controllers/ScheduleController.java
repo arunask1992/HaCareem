@@ -3,7 +3,6 @@ package com.careem.controllers;
 import com.careem.domain.Quotation;
 import com.careem.domain.RouteTracer;
 import com.careem.domain.Schedule;
-import com.careem.domain.StatusType;
 import com.careem.domain.jackson.View;
 import com.careem.domain.viewmodels.QuotationViewModel;
 import com.careem.domain.viewmodels.StatusUpdateViewModel;
@@ -31,9 +30,10 @@ public class ScheduleController extends BaseController {
     }
     @RequestMapping(value = "/ecommerce-api/schedules/{scheduleId}/update_schedule_status", method = POST)
     @ResponseStatus(HttpStatus.OK)
+    @JsonView(View.Schedule.class)
     public Schedule getSchedule(@PathVariable Long scheduleId, @RequestBody StatusUpdateViewModel status) {
         final Schedule schedule = Schedule.getSchedule(scheduleId).get();
-        schedule.setStatus(status.getStatus().toString());
+        schedule.updateStatus(status.getStatus().toString());
        return schedule.persist();
     }
 }

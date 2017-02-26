@@ -14,10 +14,10 @@ import static java.util.Arrays.asList;
 public enum StatusType implements PersistentEnum {
     ON_TRACK("on_track"),
     DELIVERED("delivered");
-    private String type;
+    private String status;
 
     StatusType(String type) {
-        this.type = type;
+        this.status = type;
     }
 
     @JsonCreator
@@ -30,6 +30,6 @@ public enum StatusType implements PersistentEnum {
 
     @Override
     public String toString() {
-        return type;
+        return status;
     }
 }

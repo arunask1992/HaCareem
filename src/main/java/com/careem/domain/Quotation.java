@@ -1,6 +1,8 @@
 package com.careem.domain;
 
 import com.careem.commons.BaseModel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,26 +19,28 @@ import java.util.Date;
 @Table(name = "quotations")
 @Getter
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Quotation extends BaseModel<Quotation>{
     public static Accessor<Resource> ACCESSOR = new Accessor<>(Resource.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long id;
+    public Long id;
 
     @Wither
-    protected String creatorId;
+    public String creatorId;
 
     @Type(type = "com.careem.domain.type.hibernate.PositionType")
     @Wither
-    protected Position source;
+    public Position source;
 
     @Type(type = "com.careem.domain.type.hibernate.PositionType")
     @Wither
-    protected Position destination;
+    public Position destination;
 
-    protected Date expectedTimeOfDelivery;
+    public Date expectedTimeOfDelivery;
 
-    @Type(type = "com.careem.domain.type.hibernate.PositionType")
-    protected GoodsType typeOfGoods;
+    @Type(type = "com.careem.domain.type.hibernate.GoodsType")
+    @JsonIgnore
+    public GoodsType typeOfGoods;
 }

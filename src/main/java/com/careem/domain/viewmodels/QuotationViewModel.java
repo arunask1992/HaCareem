@@ -17,6 +17,5 @@ public class QuotationViewModel {
     protected Position source;
     protected Position destination;
     protected GoodsType typeOfGoods;
-    protected GoodTransferType type;
     protected GoodTransferType transferType;
 }

@@ -78,6 +78,7 @@ public abstract class Resource<T> extends BaseModel<Resource<T>> {
         final long minutes = (long) (Position.findDistance(lastKnownLocation, quotation.getDestination()) / 100 * getMaximumDeliveryTimePer100KmsInHrs() * 60);
         new Date(oldDate.getTime() + minutes * MINUTE);
         return    cal.getTime();
+
     }
 
 }

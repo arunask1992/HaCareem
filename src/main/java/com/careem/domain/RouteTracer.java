@@ -2,8 +2,6 @@ package com.careem.domain;
 
 import com.careem.commons.BeanUtil;
 import com.careem.domain.gateways.PartnerAPIGateway;
-import com.careem.domain.viewmodels.PartnerSchedule;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;

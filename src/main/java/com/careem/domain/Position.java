@@ -1,6 +1,7 @@
 package com.careem.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,15 +13,10 @@ import lombok.NoArgsConstructor;
 public class Position {
     String latitude;
 
-    @Override
-    public String toString() {
-        return "{" +
-                "latitude=" + latitude +
-                ", longitude=" + longitude +
-                '}';
-    }
-
     String longitude;
+    public Position(String string){
+        super();
+    }
     public static Double findDistance(Position p1, Position p2){
         final int R = 6371; // Radius of the earth
         final Double lon2 = new Double(p2.getLongitude());

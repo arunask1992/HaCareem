@@ -1,12 +1,16 @@
 package com.careem.domain;
 
 import com.careem.commons.BaseModel;
+import com.careem.commons.BeanUtil;
 import com.careem.domain.jackson.View;
 import com.careem.domain.type.hibernate.HopStation;
 import com.careem.domain.viewmodels.PartnerSchedule;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
 import org.hibernate.annotations.Type;
+import org.springframework.amqp.core.MessagePostProcessor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -32,10 +36,6 @@ public class Schedule extends BaseModel<Schedule> {
     protected HopStation source;
 
     @JsonView(View.Schedule.class)
-    @Type(type = "com.careem.domain.type.hibernate.ModeOfTransportType")
-    protected ModeOfTransport modeOfTransport;
-
-    @JsonView(View.Schedule.class)
     @OneToOne
     protected HopStation destination;
     @JsonView(View.Schedule.class)
@@ -45,7 +45,12 @@ public class Schedule extends BaseModel<Schedule> {
     @Setter
     protected String status;
     @OneToOne
+    @JoinColumn(name = "quotation_id")
     protected Quotation quotation;
+
+    @JsonView(View.Schedule.class)
+    @Type(type = "com.careem.domain.type.hibernate.ModeOfTransportType")
+    protected ModeOfTransport modeOfTransport;
     public  Schedule (Quotation quotation, Resource resource, Position resourcelastSpotted){
         final Long stationId = new Random().nextLong();
         this.quotation = quotation;
@@ -64,7 +69,18 @@ public class Schedule extends BaseModel<Schedule> {
         this.status = partnerSchedule.getStatus();
     }
 
+
     public static Optional<Schedule> getSchedule(Long scheduleId) {
         return Schedule.ACCESSOR.find(scheduleId);
+    }
+    @SneakyThrows
+    public void updateStatus(String status){
+        this.status = status;
+        String messageAsJSON = "{\"event\": \"quotation.status.changed\"" +
+                "                \"quotation_id\":"  + this.quotation.getId() +
+                "                \"status\":" + this.getStatus() +
+                "  }";
+        MessagePostProcessor messagePostProcessor = message -> message;
+        BeanUtil.getBean(RabbitTemplate.class).convertAndSend("ecommerce_notification_queue", BeanUtil.getBean(ObjectMapper.class).writeValueAsBytes(messageAsJSON), messagePostProcessor);
     }
 }

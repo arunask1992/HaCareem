@@ -3,14 +3,13 @@ package com.careem.controllers;
 import com.careem.domain.Quotation;
 import com.careem.domain.RouteTracer;
 import com.careem.domain.Schedule;
+import com.careem.domain.StatusType;
 import com.careem.domain.jackson.View;
 import com.careem.domain.viewmodels.QuotationViewModel;
+import com.careem.domain.viewmodels.StatusUpdateViewModel;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,5 +28,12 @@ public class ScheduleController extends BaseController {
         createdQuotation.persist();
         return quotation.getTransferType().isWithinCity() ? new RouteTracer(createdQuotation).getNativeHops() :
                 new RouteTracer(createdQuotation).getHops() ;
+    }
+    @RequestMapping(value = "/ecommerce-api/schedules/{scheduleId}/update_schedule_status", method = POST)
+    @ResponseStatus(HttpStatus.OK)
+    public Schedule getSchedule(@PathVariable Long scheduleId, @RequestBody StatusUpdateViewModel status) {
+        final Schedule schedule = Schedule.getSchedule(scheduleId).get();
+        schedule.setStatus(status.getStatus().toString());
+       return schedule.persist();
     }
 }

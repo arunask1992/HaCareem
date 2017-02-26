@@ -35,7 +35,7 @@ public class RouteTracer {
                 i++;
             } while (optimalResourceId != null || i!=hubs.size());
             Resource.ACCESSOR.find(optimalResourceId).ifPresent(selectedResource -> {
-                schedules.add(new Schedule(quotation, selectedResource, selectedResource.getLastKnownLocation()));
+                schedules.add(new Schedule(quotation, selectedResource, selectedResource.getLastKnownLocation()).persist());
             });
         }
         return schedules;
@@ -52,7 +52,7 @@ public class RouteTracer {
     public List<Schedule> getHops() {
         List<Schedule> arrivedSchedule = getNativeHops();
         List<Schedule> partnerSchedules = BeanUtil.getBean(PartnerAPIGateway.class)
-                .getSchedule(quotation).stream().map(Schedule::new).collect(Collectors.toList());
+                .getSchedule(quotation).stream().map(partnerSchedule -> new Schedule(partnerSchedule).persist()).collect(Collectors.toList());
         arrivedSchedule.addAll(partnerSchedules);
         return arrivedSchedule;
     }

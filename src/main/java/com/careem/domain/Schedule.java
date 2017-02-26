@@ -5,14 +5,12 @@ import com.careem.domain.jackson.View;
 import com.careem.domain.type.hibernate.HopStation;
 import com.careem.domain.viewmodels.PartnerSchedule;
 import com.fasterxml.jackson.annotation.JsonView;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Optional;
 import java.util.Random;
 
 @Entity
@@ -44,6 +42,7 @@ public class Schedule extends BaseModel<Schedule> {
     protected Date estimatedTime;
 
     @JsonView(View.Schedule.class)
+    @Setter
     protected String status;
     @OneToOne
     protected Quotation quotation;
@@ -63,5 +62,9 @@ public class Schedule extends BaseModel<Schedule> {
         this.estimatedTime = partnerSchedule.getEstimatedTime();
         this.modeOfTransport = partnerSchedule.getModeOfTransport();
         this.status = partnerSchedule.getStatus();
+    }
+
+    public static Optional<Schedule> getSchedule(Long scheduleId) {
+        return Schedule.ACCESSOR.find(scheduleId);
     }
 }
